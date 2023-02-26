@@ -1,0 +1,279 @@
+-- Database: Restaurant 2
+
+-- DROP DATABASE IF EXISTS "Restaurant 2";
+
+CREATE DATABASE "Restaurant 2"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Spanish_Venezuela.1252'
+    LC_CTYPE = 'Spanish_Venezuela.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+
+
+
+-- Table: public.Clientes
+
+-- DROP TABLE IF EXISTS public."Clientes";
+
+CREATE TABLE IF NOT EXISTS public."Clientes"
+(
+    id_clientes integer NOT NULL,
+    nom_cliente character varying(50) COLLATE pg_catalog."default",
+    apellido_cliente character varying(50) COLLATE pg_catalog."default",
+    direccion character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    telefono numeric(20,0) NOT NULL,
+    CONSTRAINT id_cliente PRIMARY KEY (id_clientes)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Clientes"
+    OWNER to postgres;
+
+
+
+
+
+
+-- Table: public.Detalles Factura
+
+-- DROP TABLE IF EXISTS public."Detalles Factura";
+
+CREATE TABLE IF NOT EXISTS public."Detalles Factura"
+(
+    id_detalle_factura integer NOT NULL,
+    id_factura integer,
+    id_empleado integer NOT NULL,
+    id_plato integer,
+    id_mesa integer,
+    CONSTRAINT id_detalle_factura PRIMARY KEY (id_detalle_factura),
+    CONSTRAINT id_empleado FOREIGN KEY (id_empleado)
+        REFERENCES public."Empleados" (id_empleado) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_factura FOREIGN KEY (id_factura)
+        REFERENCES public."Factura" (id_factura) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_mesa FOREIGN KEY (id_mesa)
+        REFERENCES public."Mesa" (id_mesa) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_plato FOREIGN KEY (id_plato)
+        REFERENCES public."Platos" (id_plato) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Detalles Factura"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+-- Table: public.Empleados
+
+-- DROP TABLE IF EXISTS public."Empleados";
+
+CREATE TABLE IF NOT EXISTS public."Empleados"
+(
+    id_empleado integer NOT NULL,
+    nom_empleado character varying(50) COLLATE pg_catalog."default",
+    apellido_empleado character varying(50) COLLATE pg_catalog."default",
+    telefono numeric(10,0) NOT NULL,
+    cargo character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    direccion_empleado character varying(50) COLLATE pg_catalog."default",
+    id_establecimiento integer,
+    CONSTRAINT id_empleado PRIMARY KEY (id_empleado)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Empleados"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: public.Establecimiento
+
+-- DROP TABLE IF EXISTS public."Establecimiento";
+
+CREATE TABLE IF NOT EXISTS public."Establecimiento"
+(
+    id_establecimiento integer NOT NULL,
+    nom_establecimiento character varying(50) COLLATE pg_catalog."default",
+    telefono numeric(20,0),
+    direccion character varying(200) COLLATE pg_catalog."default",
+    CONSTRAINT id_establecimiento PRIMARY KEY (id_establecimiento)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Establecimiento"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: public.Factura
+
+-- DROP TABLE IF EXISTS public."Factura";
+
+CREATE TABLE IF NOT EXISTS public."Factura"
+(
+    id_factura integer NOT NULL,
+    id_cliente integer,
+    fecha date,
+    CONSTRAINT id_factura PRIMARY KEY (id_factura),
+    CONSTRAINT id_cliente FOREIGN KEY (id_cliente)
+        REFERENCES public."Clientes" (id_clientes) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Factura"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: public.Mesa
+
+-- DROP TABLE IF EXISTS public."Mesa";
+
+CREATE TABLE IF NOT EXISTS public."Mesa"
+(
+    id_mesa integer NOT NULL,
+    num_mesa numeric(2,0),
+    CONSTRAINT id_mesa PRIMARY KEY (id_mesa)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Mesa"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: public.Platos
+
+-- DROP TABLE IF EXISTS public."Platos";
+
+CREATE TABLE IF NOT EXISTS public."Platos"
+(
+    id_plato integer NOT NULL,
+    nom_plato character varying(50) COLLATE pg_catalog."default",
+    precio_plato numeric(50,1) NOT NULL,
+    CONSTRAINT id_plato PRIMARY KEY (id_plato)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Platos"
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: public.Reservaciones
+
+-- DROP TABLE IF EXISTS public."Reservaciones";
+
+CREATE TABLE IF NOT EXISTS public."Reservaciones"
+(
+    id_reservaciones integer NOT NULL,
+    id_cliente integer,
+    id_mesa integer,
+    fecha_reserva date,
+    id_establecimiento integer,
+    CONSTRAINT id_reserva PRIMARY KEY (id_reservaciones),
+    CONSTRAINT id_cliente FOREIGN KEY (id_cliente)
+        REFERENCES public."Clientes" (id_clientes) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_establecimiento FOREIGN KEY (id_establecimiento)
+        REFERENCES public."Establecimiento" (id_establecimiento) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_mesa FOREIGN KEY (id_mesa)
+        REFERENCES public."Mesa" (id_mesa) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Reservaciones"
+    OWNER to postgres;
+
+
